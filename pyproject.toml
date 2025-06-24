@@ -1,0 +1,10 @@
+[project]
+name = "toggl-to-txt"
+version = "0.1.0"
+description = "Convert Toggl Track CSV exports to a human/LLM-readable format"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pyright>=1.1.402",
+    "pytest>=8.4.1",
+]
