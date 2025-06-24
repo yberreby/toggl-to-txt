@@ -71,10 +71,10 @@ def merge_descriptions(current_desc: str, new_desc: str) -> str:
 def coalesce_consecutive(entries: List[Entry]) -> List[Entry]:
     if not entries:
         return []
-    
+
     coalesced = []
     current = entries[0].copy()
-    
+
     for e in entries[1:]:
         if e['project'] == current['project']:
             current['end'] = e['end']
@@ -83,7 +83,7 @@ def coalesce_consecutive(entries: List[Entry]) -> List[Entry]:
         else:
             coalesced.append(current)
             current = e.copy()
-    
+
     coalesced.append(current)
     return coalesced
 
@@ -121,18 +121,18 @@ def print_daily_entries(entries: List[Entry]) -> None:
 def analyze_work_pattern(entries: List[Entry]) -> str:
     if not entries:
         return ""
-    
+
     sessions = len(coalesce_consecutive(entries))
     return f" ({sessions} work blocks)"
 
 def print_daily_stats(entries: List[Entry]) -> None:
     total, stats = compute_stats(entries)
     pattern = analyze_work_pattern(entries)
-    
+
     print(f"\n{'-'*70}")
     print(f"Daily Total: {fmt_dur(total)}{pattern}")
     print(f"{'-'*70}")
-    
+
     for proj, dur in stats:
         pct = calculate_percentage(dur, total)
         print(format_project_stat(proj, dur, pct))
@@ -158,11 +158,11 @@ def print_week_days(entries: List[Entry]) -> None:
 
 def print_week_stats(entries: List[Entry], limit: int = 10) -> None:
     total, stats = compute_stats(entries)
-    
+
     print(f"\n{'-'*35}")
     print(f"Week Total: {fmt_dur_long(total)}")
     print(f"{'-'*35}")
-    
+
     for proj, dur in stats[:limit]:
         pct = calculate_percentage(dur, total)
         print(format_project_stat_long(proj, dur, pct))
@@ -191,12 +191,12 @@ def average_per_day(total: timedelta, entries: List[Entry]) -> timedelta:
 def print_month_stats(entries: List[Entry], limit: int = 7) -> None:
     total, stats = compute_stats(entries)
     avg = average_per_day(total, entries)
-    
+
     print(f"\n{'-'*35}")
     print(f"Month Total: {fmt_dur_long(total)}")
     print(f"Average per day: {fmt_dur(avg)}")
     print(f"{'-'*35}")
-    
+
     for proj, dur in stats[:limit]:
         pct = calculate_percentage(dur, total)
         print(format_project_stat_long(proj, dur, pct))
@@ -216,12 +216,12 @@ def print_overall_summary(entries: List[Entry]) -> None:
     total, stats = compute_stats(entries)
     unique_days = len(set(e['date'] for e in entries))
     avg = average_per_day(total, entries)
-    
+
     print_header(f"OVERALL SUMMARY ({unique_days} days)", '#')
     print(f"Total time tracked: {fmt_dur_long(total)}")
     print(f"Average per day: {fmt_dur(avg)}")
     print("\nTop Projects:")
-    
+
     for proj, dur in stats[:15]:
         pct = calculate_percentage(dur, total)
         print(f"{proj:<40} {fmt_dur_long(dur):>15} ({pct:5.1f}%)")
@@ -249,10 +249,10 @@ def print_monthly_summaries(entries: List[Entry]) -> None:
         print_month_summary(month, by_month[month])
 
 def main() -> None:
-    filename = sys.argv[1] if len(sys.argv) > 1 else "Toggl_time_entries_2025-03-27_to_2025-06-24.csv"
-    
+    filename = sys.argv[1]
+
     entries = list(load_entries(filename))
-    
+
     print_daily_timelines(entries)
     print_weekly_summaries(entries)
     print_monthly_summaries(entries)
