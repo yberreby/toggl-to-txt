@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import pytest
 from datetime import timedelta
-from toggl_to_timeline import (
+from toggl_to_txt import (
     parse_duration, fmt_dur, fmt_dur_long, week_of, month_of,
     merge_descriptions, coalesce_consecutive, calculate_percentage,
     sum_durations, group_by_project, fmt_time
@@ -48,14 +48,14 @@ def test_coalesce_consecutive():
         {'project': 'B', 'start': '11:00', 'end': '12:00', 'duration': timedelta(hours=1), 'desc': ''},
     ]
     result = coalesce_consecutive(entries)
-    
+
     assert len(result) == 2
     assert result[0]['project'] == 'A'
     assert result[0]['start'] == '09:00'
     assert result[0]['end'] == '11:00'
     assert result[0]['duration'] == timedelta(hours=2)
     assert result[0]['desc'] == 'task1; task2'
-    
+
     assert result[1]['project'] == 'B'
 
 def test_coalesce_empty():
@@ -80,7 +80,7 @@ def test_group_by_project():
         {'project': 'A', 'duration': timedelta(hours=1.5)},
     ]
     grouped = group_by_project(entries)
-    
+
     assert grouped['A'] == timedelta(hours=2.5)
     assert grouped['B'] == timedelta(hours=2)
 
